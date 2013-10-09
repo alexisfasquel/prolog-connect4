@@ -26,6 +26,18 @@ colonne(5,E),write(E),nl,
 colonne(6,F),write(F),nl,
 colonne(7,G),write(G),nl.
 
+element(1,X,[X|_]).
+element(I,X,[_|Q]):- (integer(I), I1 is I-1, element(I1,X,Q)), ! ;(element(I1,X,Q), I is I1+1).
+
+vecteurligne(I,X):-
+colonne(1,A), element(I,A1,A),
+colonne(2,B), element(I,B1,B),
+colonne(3,C), element(I,C1,C),
+colonne(4,D), element(I,D1,D),
+colonne(5,E), element(I,E1,E),
+colonne(6,F), element(I,F1,F),
+colonne(7,G), element(I,G1,G),
+X=[A1,B1,C1,D1,E1,F1,G1].
 
 
 

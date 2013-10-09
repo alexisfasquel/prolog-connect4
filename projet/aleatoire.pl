@@ -14,6 +14,8 @@ colonne(C,[X|Q]),insertpion(J,[X|Q],R),retract(colonne(C,[X|Q])),assert(colonne(
 insertpion(J,[0|Q],[J|Q]):-!.
 insertpion(J,[T|Q],[T|R]):-insertpion(J,Q,R).
 
+
+
 element(1,X,[X|_]).
 element(I,X,[_|Q]):- (integer(I), I1 is I-1, element(I1,X,Q)), ! ;(element(I1,X,Q), I is I1+1).
 
@@ -37,7 +39,7 @@ colonne(5,E),write(E),nl,
 colonne(6,F),write(F),nl,
 colonne(7,G),write(G),nl.
 
-verifiercolonne([X|Q]):-nth1(4,[X|Q],X),nth1(3,[X|Q],X),nth1(2,[X|Q],X),!.
+verifiercolonne([X|Q]):-nth1(4,[X|Q],X),nth1(3,[X|Q],X),nth1(2,[X|Q],X),X>0,!.
 verifiercolonne([X|Q]):-verifiercolonne(Q).
 
 verifierligne(I):-vecteurligne(I,X), verifiercolonne(X).

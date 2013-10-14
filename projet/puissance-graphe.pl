@@ -24,15 +24,18 @@ play(X, Y,Color) :-
 %play(X) :- between(0, 6, Y), play(X, Y), display(board), !, gagner(X, Y, rouge), write('You won !!!!').
 %play(X) :- ia(X), display(board), !,gagner(X, Y, jaune), write('You lost !!!!').
 
-play(X) :- between(0, 6, Y), play(X, Y,rouge),ia(Q,Z),display(board),!,verifier(X,Y,Q,Z),display(board).
+%Ia contre Joueur:
+play(X) :- between(0, 6, Y), play(X, Y,rouge),ia(Q,Z,jaune),display(board),!,verifier(X,Y,Q,Z),display(board).
+%IA contre IA:
+play :- between(0, 6, Y), ia(R, T,rouge),ia(Q,Z,jaune),display(board),!,verifier(R,T,Q,Z),display(board).
 
 verifier(X,Y,Q,Z):-((gagner(X, Y, rouge),write('You won !!!!'),retract(pawn(Q,Z,jaune)));(gagner(Q, Z, jaune),write('You lost !!!!'))).
 
+
 %Need to write the ia algorithm
-ia :-X is random(6),between(0, 6, Y),play(X,Y,jaune).
+ia(X,Y,Color) :-X is random(6),between(0, 6, Y),play(X,Y,Color),!.
 
 clear:-retractall(pawn(X,Y,Z)).
-
 
 
 

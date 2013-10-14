@@ -4,28 +4,35 @@
 :- dynamic pawn/3.
 
 
-play(X, Y) :- 
+play(X, Y,Color) :- 
     integer(X), X >= 0, X < 7,
     integer(Y), Y >= 0, Y < 7,
     not(pawn(X, Y, _)),
     YSouth is Y-1,
     pawn(X, YSouth, _),
-    assert(pawn(X, Y, rouge)).
+    assert(pawn(X, Y, Color)).
               
-play(X, Y) :- 
+play(X, Y,Color) :- 
     integer(X), X >= 0, Y =< 7,
     Y = 0,
     not(pawn(X, 0, _)),
-    assert(pawn(X, Y, rouge)).
+    assert(pawn(X, Y, Color)).
               
               
 %Main commande to play : X represents the column where you want to play
 %This commande will do everything for you =D
-play(X) :- between(0, 6, Y), play(X, Y), display(board), !, gagner(X, Y, rouge), write('You won !!!!').
-play(X) :- ia(X), display(board), !,gagner(X, Y, jaune), write('You lost !!!!').
+%play(X) :- between(0, 6, Y), play(X, Y), display(board), !, gagner(X, Y, rouge), write('You won !!!!').
+%play(X) :- ia(X), display(board), !,gagner(X, Y, jaune), write('You lost !!!!').
+
+play(X):-( between(0, 6, Y),gagner(X, Y, rouge), write('You won !!!!'),display(board));(between(0, 6, Y),gagner(X, Y, jaune), write('You lost !!!!'),display(board)).
+play(X) :- between(0, 6, Y), play(X, Y,rouge),ia, display(board),!.
 
 %Need to write the ia algorithm
-ia(X) :- 'Something have to be done here'.
+ia :-X is random(6),between(0, 6, Y),play(X,Y,jaune).
+
+clear:-retractall(pawn(X,Y,Z)).
+
+
 
 
 

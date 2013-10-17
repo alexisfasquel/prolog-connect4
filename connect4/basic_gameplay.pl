@@ -1,6 +1,7 @@
 %Creating pawn with 3 args allowing to assert predicates correctly
 :- dynamic pawn/3.
 
+%Rule which will clear the "database"
 clear :- retractall(pawn(X,Y,Z)).
 
 %Simples rules of displaying
@@ -39,8 +40,7 @@ add(X, Y, Color) :-
 %   assert(pawn(X, 1, rouge)).
 
 %Rule used to tell how many pawn there is in a column (returned by Count)
-%TODOOODODO
-next(X, Y) :- aggregate_all(count, pawn(X, _, _), Count), Y is Count+1.
+height(X, Count) :- aggregate_all(count, pawn(X, _, _), Count),.
 
 %Return true if the Xth column is full
 isfull(X) :- height(X, Count), Count > 5.
@@ -48,7 +48,7 @@ isfull(X) :- height(X, Count), Count > 5.
 
 %Main command to play : X represents the column where you want to play
 %This command will do everything for you =D
-play(X) :- next(X, Y), add(X, Y, rouge), display, nl, win(X, Y, rouge), write('you won !!'), clear, !.
+play(X) :- height(X, Count), Y is Count+1, add(X, Y, rouge), display, nl, win(X, Y, rouge), write('you won !!'), clear, !.
 play(_) :- ia(Xia, Yia), write(Xia), write(Yia), display, nl, win(Xia, Yia, jaune), write('you Lost !!'), clear.
 
 %Always returns true
@@ -66,7 +66,7 @@ win(X, Y, C) :- neighborhood(X, Y, 1, -1, C, C1), neighborhood(X, Y, -1, 1, C, C
 win(X, Y, C) :- neighborhood(X, Y, 1, 1, C, C1), neighborhood(X, Y, -1, -1, C, C2), Count is C1+C2, Count == 3, !.
 
 %This rule allows to know how many pawns of the same color Color
-%we'll find in  the line define by the vector(DX, DY), starting from the pawn(X, Y) excluded
+%we will find in  the line define by the vector(DX, DY), starting from the pawn(X, Y) excluded
 %The max values is 3 knowing that if we add a 4th at (X,Y) then we win
 neighborhood(X, Y, DX, DY, Color, Count) :- 
     (

@@ -39,8 +39,9 @@ add(X, Y, Color) :-
 %   integer(X), X >= 1, X < 8, 
 %   assert(pawn(X, 1, rouge)).
 
+
 %Rule used to tell how many pawn there is in a column (returned by Count)
-height(X, Count) :- aggregate_all(count, pawn(X, _, _), Count),.
+height(X, Count) :- aggregate_all(count, pawn(X, _, _), Count).
 
 %Return true if the Xth column is full
 isfull(X) :- height(X, Count), Count > 5.
@@ -48,11 +49,16 @@ isfull(X) :- height(X, Count), Count > 5.
 
 %Main command to play : X represents the column where you want to play
 %This command will do everything for you =D
-play(X) :- height(X, Count), Y is Count+1, add(X, Y, rouge), display, nl, win(X, Y, rouge), write('you won !!'), clear, !.
-play(_) :- ia(Xia, Yia), write(Xia), write(Yia), display, nl, win(Xia, Yia, jaune), write('you Lost !!'), clear.
+play(X) :- 
+    height(X, Count), Y is Count+1,                                                     %Finding out where to put the pawn.
+    (add(X, Y, rouge), ! ; write('You can play there !'), nl, abort), display, nl,      %If pawn was added we display, else we abort
+    (win(X, Y, rouge), write('You won !!'), clear, ! ; play).                           %Then, if we dont win then IA have to make a move (play)
+    
+%This rules is called  when we want the IA to play    
+play :- ia(Xia, Yia), display, nl, win(Xia, Yia, jaune), write('You Lost !!'), clear.
 
 %Always returns true
-%This rules determins what move the ia will do.
+%This rules determins what move the ia will do => the move have to be done in any case
 %Each rules will be written in an seperate file named after the algorithm used
 :- dynamic ia/2.
 

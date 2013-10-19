@@ -38,6 +38,9 @@ siblings(Somebody, Someone) :-  parents(Somebody, Sdad, Smum), human(Someone, _,
 elem(Obj, [Obj|R], R).
 elem(Obj, [T|Q], [T|R]) :- elem(Obj, Q, R).
 
+%extraire deux éléments d'une liste
+extract(L,[X,Y]):-member(X,L),elem(X,L,S),member(Y,S).
+
 % Concatenation de listes
 appnd([], L, L).
 appnd([Head|T], Lo, [Head|Ln]) :- appnd(T, Lo, Ln).

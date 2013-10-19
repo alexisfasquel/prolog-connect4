@@ -58,7 +58,7 @@ replaceAll(O, N, [H|T1], [H|T2]) :- H \= O, replaceAll(O, N, T1, T2).
 % 3. Theme arithmetique
 
 element(1,X,[X|_]).
-element(I,X,[_|Q]):- (integer(I), I1 is I-1, element(I1,X,Q)), ! ;(element(I1,X,Q), I is I1+1).
+element(I,X,[_|Q]):- (var(I), I1 is I-1, element(I1,X,Q)), ! ;(element(I1,X,Q), I is I1+1).
 
 
 % 4. Theme des ensemblies

@@ -51,7 +51,7 @@ isfull(X) :- height(X, Count), Count > 5.
 %This command will do everything for you =D
 play(X) :- 
     height(X, Count), Y is Count+1,                                                     %Finding out where to put the pawn.
-    (add(X, Y, rouge), ! ; write('You can play there !'), nl, abort), display, nl,      %If pawn was added we display, else we abort
+    (add(X, Y, rouge), ! ; write('You can not play there !'), nl, abort), display, nl,      %If pawn was added we display, else we abort
     (win(X, Y, rouge), write('You won !!'), clear, ! ; play).                           %Then, if we dont win then IA have to make a move (play)
     
 %This rules is called  when we want the IA to play    

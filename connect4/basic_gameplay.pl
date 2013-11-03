@@ -5,8 +5,8 @@
 clear :- retractall(pawn(X,Y,Z)).
 
 %Simples rules of displaying
-display(X, Y) :- pawn(X, Y, rouge), write(o).
-display(X, Y) :- pawn(X, Y, jaune), write(x).
+display(X, Y) :- pawn(X, Y, rouge), ansi_format([bold, fg(red)], 'o', []).
+display(X, Y) :- pawn(X, Y, jaune), ansi_format([bold, fg(yellow)], 'x', []).
 display(_, _) :- write(-).
 
 %Displaying the grid
@@ -20,6 +20,8 @@ display :-
 %   - X and Y are in the correct range
 %   - There is not already a pawn at the same place
 %   - There is a pawn below or this is the fisrt pawn of the column
+
+%This rules can be simplified : remove the Y parameter !!
 add(X, Y, Color) :- 
     integer(X), X >= 1, X < 8,
     integer(Y), Y >= 1, Y < 7,
@@ -50,12 +52,13 @@ isfull(X) :- height(X, Count), Count > 5.
 %Main command to play : X represents the column where you want to play
 %This command will do everything for you =D
 play(X) :- 
-    height(X, Count), Y is Count+1,                                                     %Finding out where to put the pawn.
+    height(X, Count), Y is Count+1,     %Finding out where to put the pawn.
     (add(X, Y, rouge), ! ; write('You can not play there !'), nl, abort), display, nl,      %If pawn was added we display, else we abort
-    (win(X, Y, rouge), write('You won !!'), clear, ! ; play).                           %Then, if we dont win then IA have to make a move (play)
+    (win(X, Y, rouge), write('You won !!'), clear, ! ; play).       %Then, if we dont win then IA have to make a move (play)
     
-%This rules is called  when we want the IA to play    
-play :- ia(Xia, Yia), display, nl, win(Xia, Yia, jaune), write('You Lost !!'), clear.
+
+%This rules is called  when we want the IA to play
+play :- ia(Xia, Yia), nl, write('IA will now play :'), display, nl, win(Xia, Yia, jaune), write('You Lost !!'), clear.
 
 %Always returns true
 %This rules determins what move the ia will do => the move have to be done in any case
@@ -66,10 +69,10 @@ play :- ia(Xia, Yia), display, nl, win(Xia, Yia, jaune), write('You Lost !!'), c
 %This rule will check every line of 4 pawn of the same color starting from (X, Y)
 %It will check the 2 vectors assiociated to the same line and check if the sum is 3
 %If true, that means that putting a pawn at (X, Y) is a winning move
-win(X, Y, C) :- neighborhood(X, Y, 1, 0, C, C1), neighborhood(X, Y, -1, 0, C, C2), Count is C1+C2, Count == 3, !.
-win(X, Y, C) :- neighborhood(X, Y, 0, 1, C, C1), neighborhood(X, Y, 0, -1, C, C2), Count is C1+C2, Count == 3, !.
-win(X, Y, C) :- neighborhood(X, Y, 1, -1, C, C1), neighborhood(X, Y, -1, 1, C, C2), Count is C1+C2, Count == 3, !.
-win(X, Y, C) :- neighborhood(X, Y, 1, 1, C, C1), neighborhood(X, Y, -1, -1, C, C2), Count is C1+C2, Count == 3, !.
+win(X, Y, C) :- neighborhood(X, Y, 1, 0, C, C1), neighborhood(X, Y, -1, 0, C, C2), Count is C1+C2, Count >= 3, !.
+win(X, Y, C) :- neighborhood(X, Y, 0, 1, C, C1), neighborhood(X, Y, 0, -1, C, C2), Count is C1+C2, Count >= 3, !.
+win(X, Y, C) :- neighborhood(X, Y, 1, -1, C, C1), neighborhood(X, Y, -1, 1, C, C2), Count is C1+C2, Count >= 3, !.
+win(X, Y, C) :- neighborhood(X, Y, 1, 1, C, C1), neighborhood(X, Y, -1, -1, C, C2), Count is C1+C2, Count >= 3, !.
 
 %This rule allows to know how many pawns of the same color Color
 %we will find in  the line define by the vector(DX, DY), starting from the pawn(X, Y) excluded

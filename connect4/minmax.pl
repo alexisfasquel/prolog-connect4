@@ -1,4 +1,4 @@
-%Cette règle détermine quel coup l'IA va jouer, utilisation de l'alorithme minmax.
+%The minmax algorythm is used to determine what pawn the ia is going to choose.
 
 
 ia(X, Y) :- minmax(5, jaune, _, X), add(X, Y, jaune).

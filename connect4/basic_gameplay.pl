@@ -5,54 +5,42 @@
 clear :- retractall(pawn(X,Y,Z)).
 
 %Simples rules of displaying
-display(X, Y) :- pawn(X, Y, rouge), ansi_format([bold, fg(red)], 'o', []).
-display(X, Y) :- pawn(X, Y, jaune), ansi_format([bold, fg(yellow)], 'x', []).
-display(_, _) :- write(-).
+display(X, Y) :- pawn(X, Y, rouge), ansi_format([bold, fg(red)], 'o', []), ansi_format([fg(blue)], '|', []).
+display(X, Y) :- pawn(X, Y, jaune), ansi_format([bold, fg(yellow)], 'x', []), ansi_format([fg(blue)], '|', []).
+display(_, _) :- write(' '), ansi_format([fg(blue)], '|', []).
 
 %Displaying the grid
 %Can use between because display is always true so always not false ;)
 display :-
-    between(1, 6, Tmp), Y is 7-Tmp, nl,
+    between(1, 6, Tmp), Y is 7-Tmp, nl, ansi_format([fg(blue)], '|', []),
     between(1, 7, X), not(display(X, Y)) ; true, !.
 
 
-%Rules which prevents to insert pawn any old way which means :
-%   - X and Y are in the correct range
-%   - There is not already a pawn at the same place
-%   - There is a pawn below or this is the fisrt pawn of the column
 
-%This rules can be simplified : remove the Y parameter !!
+
+%Rules allowing to add a pawn while preventing to insert pawn any old way which means :
+%   - X and Y are in the correct range
+%   - Y position is computed by incrementing the current nb of pawn in the column
+%   - The computed value of Y is returned
 add(X, Y, Color) :- 
     integer(X), X >= 1, X < 8,
+    height(X, Count), Y is Count+1,
     integer(Y), Y >= 1, Y < 7,
-    not(pawn(X, Y, _)),
-    ((   
-        Y == 1, 
-        asserta(pawn(X, 1, Color))
-    );
-    (   
-        YSouth is Y-1,
-        pawn(X, YSouth, _),
-        asserta(pawn(X, Y, Color))
-    )), !.
-    
-%if we divide in 2 the previous rule
-%add(X, 0) :-     
-%   integer(X), X >= 1, X < 8, 
-%   assert(pawn(X, 1, rouge)).
+    asserta(pawn(X, Y, Color)).
 
+%Rules allowing to remove a pawn
+remove(X) :- height(X, Count), retract(pawn(X, Count, _)).
+
+%Rules which return every column number where a pawn can be inserted
+playable(X) :- between(1, 7, X), once(not(pawn(X, 6, _)) ; (X is 0, true)).
 
 %Rule used to tell how many pawn there is in a column (returned by Count)
 height(X, Count) :- aggregate_all(count, pawn(X, _, _), Count).
 
-%Return true if the Xth column is full
-isfull(X) :- height(X, Count), Count > 5.
-
 
 %Main command to play : X represents the column where you want to play
 %This command will do everything for you =D
-play(X) :- 
-    height(X, Count), Y is Count+1,     %Finding out where to put the pawn.
+play(X) :-
     (add(X, Y, rouge), ! ; write('You can not play there !'), nl, abort), display, nl,      %If pawn was added we display, else we abort
     (win(X, Y, rouge), write('You won !!'), clear, ! ; play).       %Then, if we dont win then IA have to make a move (play)
     

@@ -3,26 +3,22 @@
 %Test de add
 
 testadd :- clear, 
-		not(add(O,O,jaune)), %hors limite
-		not(add(1,O,jaune)), %hors limite
-		not(add(0,1,jaune)), %hors limite
-		add(1,1,jaune), %ok
-		not(add(1,1,jaune)), %on ne peut pas ajouter deux fois un pion au même endroit
-		add(2,1,jaune), %ok
-		add(3,1,jaune), %ok
-		add(4,1,jaune), %ok
-		add(5,1,jaune), %ok
-		add(6,1,jaune), %ok
-		add(7,1,jaune), %ok
-		add(1,2,jaune), %ok
-		add(1,3,jaune), %ok
-		add(1,4,jaune), %ok
-		add(1,5,jaune), %ok
-		add(1,6,jaune), %ok
-		not(add(1,7,jaune)), %hors limite
-		not(add(8,1,jaune)), %hors limite
-		not(add(3,f,jaune)), %mauvais argument
-		not(add(d,3,jaune)) %mauvais argument
+		not(add(0,Y,jaune)), %hors limite
+		add(1,A,jaune), A==1, %ok
+		add(2,B,jaune), B==1, %ok
+		add(3,C,jaune), C==1, %ok
+		add(4,D,jaune), D==1, %ok
+		add(5,E,jaune), E==1, %ok
+		add(6,F,jaune), F==1, %ok
+		add(7,G,jaune), G==1, %ok
+		add(1,H,jaune), H==2, %ok
+		add(1,I,jaune), I==3, %ok
+		add(1,J,jaune), J==4,  %ok
+		add(1,K,jaune), K==5, %ok
+		add(1,L,jaune), L==6, %ok
+		not(add(1,M,jaune)), %hors limite
+		not(add(8,N,jaune)), %hors limite
+		not(add(d,O,jaune)) %mauvais argument
 		.
  
  
@@ -38,32 +34,18 @@ height2 :-add(1,2,jaune), height(1,Count), Count =2 . %colonne avec 2 pions
 
 
 			  
-% Test de isfull
-
-testisfull :- clear, isfullfaux, isfullvrai.
-
-isfullfaux :- not(isfull(1)). 
-isfullvrai :- add(1,1,jaune), 
-		add(1,2,jaune),
-		add(1,3,jaune),
-		add(1,4,jaune),
-		add(1,5,jaune), 
-		add(1,6,jaune), 
-		isfull(1).
 
 
 
 
 %Test de win
 
-testwin :- winvrai1.
-%%%%%%%%%%%%%%% MARCHE PAS
-winvrai1 :- add(1,1,jaune), %vertical
-		add(2,1,jaune),
-		add(3,1,jaune),
-		add(4,1,jaune),
-
-		win(1,1,jaune).
+testwin :- clear, winvrai1.
+winvrai1 :- add(1,Y,jaune), 
+		add(2,Y,jaune),
+		add(3,Y,jaune),
+		add(4,Y,jaune),
+		win(4,Y,jaune).
 
 		%win(1,1,jaune),
 		%win(1,2,jaune),
@@ -71,4 +53,4 @@ winvrai1 :- add(1,1,jaune), %vertical
 
 
 %Tous les tests 
-test :- testadd, testheight, testisfull, testwin .
+test :- testadd, testheight, testwin .

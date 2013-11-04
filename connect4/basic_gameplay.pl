@@ -42,11 +42,11 @@ height(X, Count) :- aggregate_all(count, pawn(X, _, _), Count).
 %This command will do everything for you =D
 play(X) :-
     (add(X, Y, rouge), ! ; write('You can not play there !'), nl, abort), display, nl,      %If pawn was added we display, else we abort
-    (win(X, Y, rouge), write('You won !!'), clear, ! ; play).       %Then, if we dont win then IA have to make a move (play)
+    (end(X, Y, rouge), ! ; play).       %Then, if we dont win then IA have to make a move (play)
     
 
 %This rules is called  when we want the IA to play
-play :- ia(Xia, Yia), nl, write('IA will now play :'), display, nl, win(Xia, Yia, jaune), write('You Lost !!'), clear.
+play :- ia(Xia, Yia), nl, write('IA will now play :'), display, nl, end(Xia, Yia, jaune).
 
 %Always returns true
 %This rules determins what move the ia will do => the move have to be done in any case
@@ -54,7 +54,10 @@ play :- ia(Xia, Yia), nl, write('IA will now play :'), display, nl, win(Xia, Yia
 :- dynamic ia/2.
 
 
-
+end(X, Y, Color) :-
+    Color == rouge, win(X, Y, Color), ansi_format([bold,fg(green)], 'Congratulation! You won!', []), clear, !
+    ; Color == jaune, win(X, Y, Color), ansi_format([bold,fg(red)], 'Sorry... You lost...', []), clear, !
+    ; not(playable(_)), ansi_format([bold,fg(orange)], 'Mhh... Try again!', []), clear, !.
 
 %This rule will check every line of 4 pawn of the same color starting from (X, Y)
 %It will check the 2 vectors assiociated to the same line and check if the sum is 3

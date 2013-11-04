@@ -1,7 +1,7 @@
 %Cette règle détermine quel coup l'IA va jouer, utilisation de l'alorithme minmax.
 
 
-ia(X, Y) :- minmax(6, jaune, _, X), write(X), add(X, Y, jaune).
+ia(X, Y) :- minmax(5, jaune, _, X), add(X, Y, jaune).
 
 
 % Rules used to find a move using minmax algorithm
@@ -12,15 +12,17 @@ minmax(P, Color, Value, Coup) :-
     Color == rouge, aggregate_all(min(V, X), simulate(P, Color, V, X), min(Value, Coup)), !.
 
 
+%
 simulate(P, Color, Value, X) :-
-    playable(X),
-    Coeff is 10-P,
-    once((isTerminal(X, Color, V), Value is Coeff*V ) ; (
-    (add(X, _, Color),
-    Pm is P - 1,
-    (Color == jaune, minmax(Pm, rouge, Value, _) ;
-    Color == rouge, minmax(Pm, jaune, Value, _) ),
-    remove(X) ; true ))).
+    (playable(X),
+        Coeff is 10-P,
+        once((isTerminal(X, Color, V), Value is Coeff*V ) 
+        ; ((add(X, _, Color),  Pm is P - 1,
+        ( Color == jaune, minmax(Pm, rouge, Value, _) 
+            ; Color == rouge, minmax(Pm, jaune, Value, _)),
+        remove(X) ; true )))   
+    ; Value is 0
+    ).
 
 % random_permutation([1,2,3,4,5,6,7], P).
 

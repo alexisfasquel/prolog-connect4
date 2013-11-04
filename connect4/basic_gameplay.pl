@@ -54,6 +54,8 @@ play :- ia(Xia, Yia), nl, write('IA will now play :'), display, nl, win(Xia, Yia
 :- dynamic ia/2.
 
 
+
+
 %This rule will check every line of 4 pawn of the same color starting from (X, Y)
 %It will check the 2 vectors assiociated to the same line and check if the sum is 3
 %If true, that means that putting a pawn at (X, Y) is a winning move

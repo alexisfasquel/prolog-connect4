@@ -13,8 +13,8 @@ isfull(X) :- height(X, Count), Count > 5.
 matchnull:- isfull(1),isfull(2),isfull(3),isfull(4),isfull(5),isfull(6),isfull(7).
 
 %Represents the ia playing one against the other
-ia2(Xia,Yia) :- ia(Xia, Yia). %L'ia ici doit placer des pions jaune
-ia1(Xia,Yia) :- iadifferente(Xia, Yia). %ici l'ia doit placerdes pions rouge
+ia2(Xia,Yia) :- ia(Xia, Yia). %Ia with yellow pawns.
+ia1(Xia,Yia) :- iadifferente(Xia, Yia). %Ia with red pawns
 
 %Function which make the 2 ia play until one wins.
 

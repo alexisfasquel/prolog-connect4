@@ -1,25 +1,28 @@
 %Tests unitaires
 
+%Tous les tests (sauf les "play" à cause de l'affichage)
+test :- testadd, testheight, testwin, testplay .
+
+
 %Test de add
 
 testadd :- clear, 
-		not(add(0,Y,jaune)), %hors limite
-		add(1,A,jaune), A==1, %ok
-		add(2,B,jaune), B==1, %ok
-		add(3,C,jaune), C==1, %ok
-		add(4,D,jaune), D==1, %ok
-		add(5,E,jaune), E==1, %ok
-		add(6,F,jaune), F==1, %ok
-		add(7,G,jaune), G==1, %ok
-		add(1,H,jaune), H==2, %ok
-		add(1,I,jaune), I==3, %ok
-		add(1,J,jaune), J==4,  %ok
-		add(1,K,jaune), K==5, %ok
-		add(1,L,jaune), L==6, %ok
-		not(add(1,M,jaune)), %hors limite
-		not(add(8,N,jaune)), %hors limite
-		not(add(d,O,jaune)) %mauvais argument
-		.
+		not(add(0,Y,jaune)), %hors limite : pas de colonne 0
+		add(1,A,jaune), A==1, %remplit ligne : ok
+		add(2,B,jaune), B==1, %remplit ligne : ok
+		add(3,C,jaune), C==1, %remplit ligne : ok
+		add(4,D,jaune), D==1, %remplit ligne : ok
+		add(5,E,jaune), E==1, %remplit ligne : ok
+		add(6,F,jaune), F==1, %remplit ligne : ok
+		add(7,G,jaune), G==1, %remplit ligne : ok
+		add(1,H,jaune), H==2, %remplit colonne : ok
+		add(1,I,jaune), I==3, %remplit colonne : ok
+		add(1,J,jaune), J==4,  %remplit colonne : ok
+		add(1,K,jaune), K==5, %remplit colonne : ok
+		add(1,L,jaune), L==6, %remplit colonne : ok
+		not(add(1,M,jaune)), %hors limite : colonne pleine
+		not(add(8,N,jaune)), %hors limite : pas de colonne 8
+		not(add(d,O,jaune)). %mauvais argument : pas un entier
  
  
  
@@ -31,26 +34,55 @@ height0 :- height(1,Count), Count =0. %colonne vide
 height1 :-add(1,1,jaune), height(1,Count), Count =1 . %colonne avec 1 pion
 height2 :-add(1,2,jaune), height(1,Count), Count =2 . %colonne avec 2 pions
 
-
-
-			  
-
-
-
-
+ 
 %Test de win
 
-testwin :- clear, winvrai1.
-winvrai1 :- add(1,Y,jaune), 
-		add(2,Y,jaune),
-		add(3,Y,jaune),
-		add(4,Y,jaune),
-		win(4,Y,jaune).
+testwin :- clear, winvrai1, 
+			clear, winvrai2, 
+			clear, winvrai3, 
+			clear, winvrai4,
+			clear, winfaux1,
+			clear, winfaux2.
+			
+winvrai1 :- %alignement horizontal
+		add(1,Y,jaune), add(2,Y,jaune), add(3,Y,jaune), add(4,Y,jaune),
+		win(1,Y,jaune), win(2,Y,jaune), win(3,Y,jaune), win(4,Y,jaune), %on gagne avec les jaunes
+		not(win(1,Y,rouge)), not(win(2,Y,rouge)), not(win(3,Y,rouge)), not(win(4,Y,rouge)). %on ne gagne pas avec les rouges
+winvrai2 :- %alignement vertical
+		add(1,A,jaune), add(1,B,jaune), add(1,C,jaune), add(1,D,jaune),
+		win(1,A,jaune), win(1,B,jaune), win(1,C,jaune), win(1,D,jaune). %on gagne avec les jaunes
+winvrai3 :- %alignement diagonal droite
+		add(1,A,jaune), 
+		add(2,A,jaune),	add(2,B,jaune),
+		add(3,A,jaune),	add(3,B,jaune),add(3,C,jaune),
+		add(4,A,jaune), add(4,B,jaune), add(4,C,jaune), add(4,D,jaune),
+		win(1,A,jaune), win(2,B,jaune), win(3,C,jaune), win(4,D,jaune). %on gagne avec les jaunes
+winvrai4 :- %alignement diagonal gauche
+		add(4,A,jaune), 
+		add(3,A,jaune), add(3,B,jaune),
+		add(2,A,jaune), add(2,B,jaune), add(2,C,jaune),
+		add(1,A,jaune), add(1,B,jaune), add(1,C,jaune), add(1,D,jaune),
+		win(1,D,jaune), win(2,C,jaune), win(3,B,jaune), win(4,A,jaune). %on gagne avec les jaunes
+winfaux1 :- %on ne gagne pas tant qu'il n'y en a pas 4 alignés
+			not(win(1,1,jaune)),
+			add(1,A,jaune),
+			add(1,B,jaune), not(win(1,1,jaune)),
+			add(1,C,jaune), not(win(1,1,jaune)).
+winfaux2 :- %on ne gagne pas si un rouge interfere
+			add(1,Y,rouge), add(3,Y,rouge), add(4,Y,jaune),	add(5,Y,jaune),	add(6,Y,jaune),		
+			not(win(2,Y,jaune)).
+			
+			
+%Test play
+testplay :- clear, testplay1, clear, testplay2.
 
-		%win(1,1,jaune),
-		%win(1,2,jaune),
-		%win(1,3,jaune),
-
-
-%Tous les tests 
-test :- testadd, testheight, testwin .
+testplay1 :- clear, not(play), once(pawn(X,Y,jaune)), X>0, Y>0, X<8, Y<7. %un pion jaune est bien créé par l'IA
+testplay2 :- clear, not(play(3)), once(pawn(3,Z,rouge)), Z>0, Z<7,  %un pion rouge est bien créé par le joueur
+			once(pawn(X,Y,jaune)), X>0, Y>0, X<8, Y<7. % et un pion jaune est bien créé par l'IA
+	
+			
+			
+			
+			
+			
+			

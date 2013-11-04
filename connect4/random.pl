@@ -1,5 +1,5 @@
-%Cette règle permet de jouer quel coup l'ia va jouer, de façon aléatoire.
+% This ia plays randomly
 
 ia(X, Y) :- X is random(8), add(X, Y, jaune), ! .
-%Si la première règle est fausse (colonne pleine), l'ia rejoue jusqu'à trouver une solution :
+%If the first rules is false (full column), the ia plays again until finding a solution  :
 ia(X, Y) :- ia(X,Y), !. 

@@ -12,12 +12,11 @@ isfull(X) :- height(X, Count), Count > 5.
 
 matchnull:- isfull(1),isfull(2),isfull(3),isfull(4),isfull(5),isfull(6),isfull(7).
 
-%represente les ia qui jouet les une contrele les autres
+%Represents the ia playing one against the other
 ia2(Xia,Yia) :- ia(Xia, Yia). %L'ia ici doit placer des pions jaune
 ia1(Xia,Yia) :- iadifferente(Xia, Yia). %ici l'ia doit placerdes pions rouge
 
-%Fonction qui fait jouer une ia contre une autre jusqu'a ce qu une des deux ia gagne
-
+%Function which make the 2 ia play until one wins.
 
 testv1(X,Y,Color,CouleurVictoire):- (win(X, Y, rouge),pawn(X, Y, rouge),clear,CouleurVictoire = rouge); (win(X, Y, jaune),pawn(X, Y, jaune),clear,CouleurVictoire = jaune);(matchnull,clear,CouleurVictoire = none).
 testv1(X,Y,Color,CouleurVictoire):- Color == rouge,ia1(X1,Y1),testv1(X1,Y1,jaune,CouleurVictoire).

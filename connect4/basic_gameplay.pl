@@ -16,8 +16,6 @@ display :-
     between(1, 7, X), not(display(X, Y)) ; true, !.
 
 
-
-
 %Rules allowing to add a pawn while preventing to insert pawn any old way which means :
 %   - X and Y are in the correct range
 %   - Y position is computed by incrementing the current nb of pawn in the column
@@ -46,7 +44,7 @@ play(X) :-
     
 
 %This rules is called  when we want the IA to play
-play :- ia(Xia, Yia), nl, write('IA will now play :'), display, nl, end(Xia, Yia, jaune).
+play :- ia(Xia, Yia, jaune), nl, write('IA will now play :'), display, nl, end(Xia, Yia, jaune).
 
 %Always returns true
 %This rules determins what move the ia will do => the move have to be done in any case

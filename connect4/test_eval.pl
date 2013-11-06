@@ -9,7 +9,6 @@ victoire(CouleurVictoire,VJ,VR):- CouleurVictoire == none,VJ is 0,VR is 0.
 test(Nombre,V1,V2,V3,V4):- Nombre == 0,write('jaune:'),write(V1),write(' rouge :'),write(V2).
 test(Nombre,V1,V2,V3,V4):- testv1(1,1,rouge,CouleurVictoire),victoire(CouleurVictoire,V3,V4),V11 is V1+V3,V22 is V2+V4,Nombre1 is Nombre-1,test(Nombre1,V11,V22,V33,V44).
 
-
 %Return true if the Xth column is full
 isfull(X) :- height(X, Count), Count > 5.
 
@@ -29,3 +28,7 @@ testv1(X,Y,Color,CouleurVictoire):- Color == jaune,ia2(X1,Y1),testv1(X1,Y1,rouge
 
 %play NBtest games between "ia" and "iadifferente"
 fonctiontestqualite(NBtest):- integer(NBtest),test(NBtest,0,0,VR,VJ).
+
+
+
+play(Ia1, Ia2) :- 

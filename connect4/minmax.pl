@@ -1,7 +1,7 @@
 %The minmax algorythm is used to determine what pawn the ia is going to choose.
 
 
-ia(X, Y) :- minmax(5, jaune, _, X), add(X, Y, jaune).
+ia(X, Y, Color) :- minmax(5, Color, _, X), add(X, Y, Color).
 
 
 % Rules used to find a move using minmax algorithm
@@ -24,8 +24,8 @@ simulate(P, Color, Value, X) :-
     ; Value is 0
     ).
 
-% random_permutation([1,2,3,4,5,6,7], P).
 
+% random_permutation([1,2,3,4,5,6,7], P).
 
 
 % A move is terminal if it is :
